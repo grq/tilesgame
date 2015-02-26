@@ -1,1 +1,1 @@
-# tilesgame
+[Wiki](../../wiki)
