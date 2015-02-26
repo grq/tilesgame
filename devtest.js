@@ -11,7 +11,7 @@
         fullScreenMessages: false,
         gameOverTitle: 'HA-HA!',
         gameOverText: ['Your score is only ', Tilesgame.getRenderScoreText(), ',<br/>. One more time?'].join(''),
-        imgFolder: 'img/simpsons_theme/',
+        imgFolder: 'build/demo/img/simpsons_theme/',
         gameOverImg: 'nelson.png',
         bestScoreImg: 'willie.png',
         tilesStyle: {
