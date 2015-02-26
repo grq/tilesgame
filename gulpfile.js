@@ -5,7 +5,7 @@
     order = require('gulp-order'),
     minifyCss = require('gulp-minify-css'),
     runSequence = require('run-sequence'),
-    BUILD_DIRECTORY = 'build',
+    BUILD_DIRECTORY = 'build/tilesgame',
     DEMO_DIRECTORY = 'demo/libs/tilesgame';
 
 gulp.task('buildjs', function () {
