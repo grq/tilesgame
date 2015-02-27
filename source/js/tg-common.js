@@ -66,6 +66,8 @@
         noImages: 'tilesgame-setting-noimages'
     },
 
+    storageBestScoreKey: 'TILESGAME_BEST_SCORE',
+
     inheritBase: function (child) {
         child.prototype = new Tilesgame.Base();
     }

@@ -67,6 +67,8 @@ var Tilesgame = {
         noImages: 'tilesgame-setting-noimages'
     },
 
+    storageBestScoreKey: 'TILESGAME_BEST_SCORE',
+
     inheritBase: function (child) {
         child.prototype = new Tilesgame.Base();
     }
@@ -589,17 +591,15 @@ Tilesgame.inheritBase(Tilesgame.Scoreboard);
 
 $.extend(Tilesgame.Scoreboard.prototype, {
 
-    storageBestScoreKey: 'SIDATRON_BEST_SCORE',
-
     restart: function () {
         var self = this, me = self.private;
         me.newBestScore = false;
         me.totalScore = 0;
         me.bestScore = 'NA';
         if (localStorage) {
-            if (!localStorage[self.storageBestScoreKey])
-                localStorage[self.storageBestScoreKey] = 0;
-            me.bestScore = localStorage[self.storageBestScoreKey];
+            if (!localStorage[Tilesgame.storageBestScoreKey])
+                localStorage[Tilesgame.storageBestScoreKey] = 0;
+            me.bestScore = localStorage[Tilesgame.storageBestScoreKey];
         }
         self.updateScore();
     },
@@ -624,7 +624,7 @@ $.extend(Tilesgame.Scoreboard.prototype, {
         if (localStorage) {
             if (me.bestScore < me.totalScore) {
                 me.bestScore = me.totalScore;
-                localStorage[this.storageBestScoreKey] = me.bestScore;
+                localStorage[Tilesgame.storageBestScoreKey] = me.bestScore;
                 if (me.options.showBestScore && !me.newBestScore) {
                     me.newBestScore = true;
                     self.fire('bestscore');

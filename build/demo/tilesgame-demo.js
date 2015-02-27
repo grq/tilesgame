@@ -1,6 +1,6 @@
 (function () {
     var options = {
-        startTilesgameCount: 16,
+        startTilesgameCount: 2,
         fieldSize: { x: 4, y: 4 },
         showWeight: false,
         showTryAgain: true,
@@ -10,7 +10,7 @@
         menuButtons: Tilesgame.ScoreBoardButton.ShowHideWeight | Tilesgame.ScoreBoardButton.Restart | Tilesgame.ScoreBoardButton.ShowHideImages,
         fullScreenMessages: false,
         gameOverTitle: 'HA-HA!',
-        gameOverText: ['Your score is only ', Tilesgame.getRenderScoreText(), ',<br/>. One more time?'].join(''),
+        gameOverText: ['Your score is only ', Tilesgame.getRenderScoreText(), '.<br/> One more time?'].join(''),
         imgFolder: 'img/simpsons_theme/',
         gameOverImg: 'nelson.png',
         bestScoreImg: 'willie.png',
