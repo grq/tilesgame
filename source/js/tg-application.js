@@ -63,7 +63,8 @@ $.extend(Tilesgame.App.prototype, {
             imgFolder: opt.imgFolder,
             durationTileGrow: opt.durationTileGrow,
             durationTileCreate: opt.durationTileCreate,
-            durationTileMove: opt.durationTileMove
+            durationTileMove: opt.durationTileMove,
+            tileGrowSizeIncrease: opt.tileGrowSizeIncrease
         };
     },
 

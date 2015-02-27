@@ -31,8 +31,8 @@ $.extend(Tilesgame.Tile.prototype, {
 
     animateIncreaseWeight: function (deferred) {
         var me = this.private, el = me.el,
-            duration = me.options.durationTileGrow, // me.options.durationTileGrow
-            addition = 20,
+            duration = me.options.durationTileGrow,
+            addition = me.options.tileGrowSizeIncrease,
             height = el.height(),
             width = el.width(),
             newCss = {
@@ -58,7 +58,7 @@ $.extend(Tilesgame.Tile.prototype, {
 
     animateCreation: function (deferred) {
         var me = this.private, el = me.el,
-            duration = me.options.durationTileCreate, // me.options.durationTileCreate
+            duration = me.options.durationTileCreate,
             height = el.height(),
             width = el.width(),
             newCss = {
@@ -82,7 +82,6 @@ $.extend(Tilesgame.Tile.prototype, {
     },
 
     animateMove: function (deferred) {
-        //
         var me = this.private;
         me.el.animate(me.cell.offset(), me.options.durationTileMove, function () {
             if (deferred)
@@ -96,7 +95,7 @@ $.extend(Tilesgame.Tile.prototype, {
 
     increaseWeight: function (outDeferred) {
         var self = this, deferred = $.Deferred();
-        this.private.weight *= 2;
+        self.private.weight *= 2;
         $.when(outDeferred).then(function () {
             self.printWeight();
             self.animateIncreaseWeight(deferred);

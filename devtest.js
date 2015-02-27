@@ -21,6 +21,7 @@
             '512': { img: 'bart.png', font: 'FFF' }, '1024': { img: 'homer.png', font: 'FFF' }, '2048': { img: 'ralph.png', font: 'FFF' }, '4096': { img: 'burns.png', font: 'FFF' },
             '8192': { img: 'skinner.png', font: 'FFF' }, 'default': { img: 'ned.png', font: 'FFF' }
         },
+        tileGrowSizeIncrease: 30
     };
     $(document).ready(function () {
         apps = $('.tilesgame').tilesgame(options);

@@ -113,4 +113,5 @@ Tilesgame.defaultOptions = {
     durationTileGrow: 80,
     durationTileCreate: 80,
     durationTileMove: 80,
+    tileGrowSizeIncrease: 20
 };
