@@ -47,7 +47,10 @@ $.extend(Tilesgame.FieldCell.prototype, {
         var opt = this.private.options;
         return {
             tilesStyle: opt.tilesStyle,
-            imgFolder: opt.imgFolder
+            imgFolder: opt.imgFolder,
+            durationTileGrow: opt.durationTileGrow,
+            durationTileCreate: opt.durationTileCreate,
+            durationTileMove: opt.durationTileMove
         };
     },
 

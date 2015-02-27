@@ -18,7 +18,7 @@
         });
         $(window).resize(function () {
             for (var i = apps.length; i--;) {
-                apps[i].onResize();
+                apps[i].resize();
             }
         });
         return apps;

@@ -30,8 +30,8 @@ $.extend(Tilesgame.Tile.prototype, {
     },
 
     animateIncreaseWeight: function (deferred) {
-        var el = this.private.el,
-            duration = 80,
+        var me = this.private, el = me.el,
+            duration = me.options.durationTileGrow, // me.options.durationTileGrow
             addition = 20,
             height = el.height(),
             width = el.width(),
@@ -57,8 +57,8 @@ $.extend(Tilesgame.Tile.prototype, {
     },
 
     animateCreation: function (deferred) {
-        var el = this.private.el,
-            duration = 100,
+        var me = this.private, el = me.el,
+            duration = me.options.durationTileCreate, // me.options.durationTileCreate
             height = el.height(),
             width = el.width(),
             newCss = {
@@ -81,9 +81,10 @@ $.extend(Tilesgame.Tile.prototype, {
         });
     },
 
-    animateMove: function (deferred, duration) {
-        var defaultDuration = 100;
-        this.private.el.animate(this.private.cell.offset(), duration || defaultDuration, function () {
+    animateMove: function (deferred) {
+        //
+        var me = this.private;
+        me.el.animate(me.cell.offset(), me.options.durationTileMove, function () {
             if (deferred)
                 deferred.resolve();
         });
@@ -134,7 +135,7 @@ $.extend(Tilesgame.Tile.prototype, {
         me.rendered = true;
     },
 
-    onResize: function () {
+    resize: function () {
         this.private.el.css(this.private.cell.offset());
     },
 

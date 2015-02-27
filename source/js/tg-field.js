@@ -111,7 +111,10 @@ $.extend(Tilesgame.Field.prototype, {
         var opt = this.private.options;
         return {
             tilesStyle: opt.tilesStyle,
-            imgFolder: opt.imgFolder
+            imgFolder: opt.imgFolder,
+            durationTileGrow: opt.durationTileGrow,
+            durationTileCreate: opt.durationTileCreate,
+            durationTileMove: opt.durationTileMove
         };
     },
 
@@ -181,11 +184,11 @@ $.extend(Tilesgame.Field.prototype, {
             self.private.allowMove = true;
     },
 
-    onResize: function () {
+    resize: function () {
         var cells = Array.prototype.concat.apply([], this.private.fieldCells);
         for (var i = cells.length; i--;) {
             if (cells[i].hasTile())
-                cells[i].getTile().onResize();
+                cells[i].getTile().resize();
         }
     },
 

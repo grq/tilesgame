@@ -26,8 +26,6 @@ $.extend(Tilesgame.App.prototype, {
 
     restart: function () {
         var me = this.private;
-        if (me.gameMessanger)
-            me.gameMessanger.hide();
         if (me.gameField)
             me.gameField.restart();
         if (me.gameScore)
@@ -62,7 +60,10 @@ $.extend(Tilesgame.App.prototype, {
             startTilesgameCount: opt.startTilesgameCount,
             size: opt.fieldSize,
             tilesStyle: opt.tilesStyle,
-            imgFolder: opt.imgFolder
+            imgFolder: opt.imgFolder,
+            durationTileGrow: opt.durationTileGrow,
+            durationTileCreate: opt.durationTileCreate,
+            durationTileMove: opt.durationTileMove
         };
     },
 
@@ -78,6 +79,10 @@ $.extend(Tilesgame.App.prototype, {
             imgFolder: opt.imgFolder,
             gameOverImg: opt.gameOverImg,
             bestScoreImg: opt.bestScoreImg,
+            durationShowGameOver: opt.durationShowGameOver,
+            durationShowBestScore: opt.durationShowBestScore,
+            durationHideGameOver: opt.durationHideGameOver,
+            durationHideBestScore: opt.durationHideBestScore
         };
     },
 
@@ -88,12 +93,12 @@ $.extend(Tilesgame.App.prototype, {
         me.gameField.render();
     },
 
-    onResize: function () {
+    resize: function () {
         var me = this.private;
         if (me.gameField)
-            me.gameField.onResize();
+            me.gameField.resize();
         if (me.gameMessanger)
-            me.gameMessanger.onResize();
+            me.gameMessanger.resize();
     },
 
     onGameOver: function () {

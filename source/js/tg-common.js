@@ -105,5 +105,12 @@ Tilesgame.defaultOptions = {
         '4096': { font: '', bg: 'CC3300', img: '' },
         '8192': { font: '', bg: '333366', img: '' },
         'default': { font: 'FFF', bg: '0066CC', img: '' }
-    }
+    },
+    durationShowGameOver: 1000,
+    durationHideGameOver: 500,
+    durationShowBestScore: 500,
+    durationHideBestScore: 500,
+    durationTileGrow: 80,
+    durationTileCreate: 80,
+    durationTileMove: 80,
 };

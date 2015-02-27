@@ -5,9 +5,6 @@
         },
         parent: parent,
         score: 'NA',
-        durationOver: 1000,
-        durationHide: 500,
-        durationBestScore: 500,
     };
     $.extend(this.private.options, options);
     this.init();
@@ -22,31 +19,27 @@ $.extend(Tilesgame.ScreenMessanger.prototype, {
         NewBestScore: 2
     },
 
-    onResize: function () {
-        this.resize();
-    },
-
     showGameOver: function (score) {
-        var self = this;
-        self.private.score = score;
-        self.showMessage(self.Message.GameOver, self.private.durationOver);
+        var self = this, me = self.private;
+        me.score = score;
+        self.showMessage(self.Message.GameOver, me.options.durationShowGameOver);
     },
 
     showBestScore: function () {
-        var self = this;
-        self.showMessage(self.Message.NewBestScore, self.private.durationBestScore);
-        self.hide();
+        var self = this, opt = self.private.options;
+        self.showMessage(self.Message.NewBestScore, opt.durationShowBestScore);
+        self.hide(opt.durationHideBestScore);
     },
 
-    hide: function () {
+    hide: function (duration) {
         var self = this, me = self.private;
-        me.maskEl.animate({ opacity: '0' }, me.durationHide, function () {
+        me.maskEl.animate({ opacity: '0' }, duration, function () {
             me.maskEl.hide();
         });
-        me.msgBoxEl.animate({ opacity: '0' }, me.durationHide, function () {
+        me.msgBoxEl.animate({ opacity: '0' }, duration, function () {
             me.msgBoxEl.hide();
         });
-        me.msgEl.animate({ opacity: '0' }, me.durationHide, function () {
+        me.msgEl.animate({ opacity: '0' }, duration, function () {
             me.gameOverEl.appendTo(me.msgHolder);
             me.bestScoreEl.appendTo(me.msgHolder);
             me.msgEl.hide();
@@ -173,6 +166,7 @@ $.extend(Tilesgame.ScreenMessanger.prototype, {
         divRestart = $('<div/>', { 'class': Tilesgame.Cls.buttonRestart }).appendTo(me.gameOverEl);
         spanRestart = $('<span/>').html(me.options.tryAgainText).appendTo(divRestart);
         spanRestart.click(function () {
+            self.hide(me.options.durationHideGameOver)
             self.fire('restart');
         });
     }
