@@ -1,5 +1,6 @@
 ﻿Tilesgame.Scoreboard = function (parent, options) {
-    this.private = {
+    var me = this;
+    me.private = {
         parent: parent,
         container: false,
         totalScore: 0,
@@ -7,9 +8,7 @@
         scoreEl: false,
         bestScoreEl: false,
         settingsEl: false,
-        options: {
-            /* visible, showBestScore, buttons, showWeight, */
-        },
+        options: {},
         settings: {
             showTileWeight: {
                 el: false,
@@ -28,7 +27,7 @@
             }
         }
     };
-    $.extend(this.private.options, options);
+    $.extend(me.private.options, options);
 };
 
 Tilesgame.inheritBase(Tilesgame.Scoreboard);
@@ -41,8 +40,9 @@ $.extend(Tilesgame.Scoreboard.prototype, {
         me.totalScore = 0;
         me.bestScore = 'NA';
         if (localStorage) {
-            if (!localStorage[Tilesgame.storageBestScoreKey])
+            if (!localStorage[Tilesgame.storageBestScoreKey]) {
                 localStorage[Tilesgame.storageBestScoreKey] = 0;
+            }
             me.bestScore = localStorage[Tilesgame.storageBestScoreKey];
         }
         self.updateScore();
@@ -108,12 +108,15 @@ $.extend(Tilesgame.Scoreboard.prototype, {
         me.settingsEl = $('<div/>', {
             'class': Tilesgame.Cls.settingsContainer
         }).appendTo(el);
-        if ((me.options.buttons & Tilesgame.ScoreBoardButton.ShowHideWeight) > 0)
+        if ((me.options.buttons & Tilesgame.ScoreBoardButton.ShowHideWeight) > 0) {
             self.initTileWeight();
-        if ((me.options.buttons & Tilesgame.ScoreBoardButton.Restart) > 0)
+        }
+        if ((me.options.buttons & Tilesgame.ScoreBoardButton.Restart) > 0) {
             self.renderRestartBtn();
-        if ((me.options.buttons & Tilesgame.ScoreBoardButton.ShowHideImages) > 0)
+        }
+        if ((me.options.buttons & Tilesgame.ScoreBoardButton.ShowHideImages) > 0) {
             self.initImageSwitcher();
+        }
     },
 
     initTileWeight: function () {
@@ -128,8 +131,9 @@ $.extend(Tilesgame.Scoreboard.prototype, {
         var self = this, me = self.private,
             setting = me.settings.showTileWeight,
             parent = $(me.parent);
-        if (!isInit)
+        if (!isInit) {
             setting.state = !setting.state;
+        }
         setting.el.text(setting.state ? setting.hideTxt : setting.showTxt);
         parent.toggleClass(Tilesgame.Cls.hideTileWeight, !setting.state);
     },
@@ -154,8 +158,9 @@ $.extend(Tilesgame.Scoreboard.prototype, {
     toggleImages: function (isInit) {
         var self = this, me = self.private,
             setting = me.settings.showHideImages;
-        if (!isInit)
+        if (!isInit) {
             setting.state = !setting.state;
+        }
         setting.el.text(setting.state ? setting.hideTxt : setting.showTxt);
         $('body').toggleClass(Tilesgame.Cls.noImages, !setting.state);
     },

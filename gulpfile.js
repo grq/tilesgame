@@ -4,6 +4,7 @@
     jshint = require('gulp-jshint'),
     order = require('gulp-order'),
     minifyCss = require('gulp-minify-css'),
+    rename = require('gulp-rename'),
     runSequence = require('run-sequence'),
     BUILD_DIRECTORY = 'build/tilesgame';
 
@@ -20,7 +21,7 @@ gulp.task('buildjs', function () {
         .pipe(jshint.reporter('default'))
         .pipe(concat('tilesgame.js'))
         .pipe(gulp.dest(BUILD_DIRECTORY))
-        .pipe(concat('tilesgame.min.js'))
+        .pipe(rename('tilesgame.min.js'))
         .pipe(uglify({
             preserveComments: 'some'
         }))

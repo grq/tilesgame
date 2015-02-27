@@ -5,7 +5,7 @@
         options: false,
         gameField: false,
         gameScore: false,
-        gameMessanger: false,
+        gameMessanger: false
     };
     me.private.options = $.extend(true, Tilesgame.defaultOptions, options);
 };
@@ -16,20 +16,21 @@ $.extend(Tilesgame.App.prototype, {
 
     start: function () {
         var self = this;
-        if (!self.private.container)
+        if (!self.private.container) {
             throw 'Container is not defined';
-        else {
-            self.init();
-            self.render();
         }
+        self.init();
+        self.render();
     },
 
     restart: function () {
         var me = this.private;
-        if (me.gameField)
+        if (me.gameField) {
             me.gameField.restart();
-        if (me.gameScore)
+        }
+        if (me.gameScore) {
             me.gameScore.restart();
+        }
     },
 
     init: function () {
@@ -50,7 +51,7 @@ $.extend(Tilesgame.App.prototype, {
             showBestScore: opt.showBestScore,
             buttons: opt.menuButtons,
             showWeight: opt.showWeight,
-            useImages: opt.useImages,
+            useImages: opt.useImages
         };
     },
 
@@ -96,10 +97,12 @@ $.extend(Tilesgame.App.prototype, {
 
     resize: function () {
         var me = this.private;
-        if (me.gameField)
+        if (me.gameField) {
             me.gameField.resize();
-        if (me.gameMessanger)
+        }
+        if (me.gameMessanger) {
             me.gameMessanger.resize();
+        }
     },
 
     onGameOver: function () {

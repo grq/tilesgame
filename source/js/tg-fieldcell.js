@@ -3,7 +3,7 @@
     me.private = {
         el: false,
         currentTile: false,
-        options: options
+        options: {}
     };
     $.extend(me.private.options, options);
 };
@@ -23,8 +23,9 @@ $.extend(Tilesgame.FieldCell.prototype, {
     },
 
     setTile: function (tile, increase) {
-        this.private.currentTile = tile;
-        return this.private.currentTile.setFieldCell(this.private.el, increase);
+        var me = this.private;
+        me.currentTile = tile;
+        return me.currentTile.setFieldCell(me.el, increase);
     },
 
     createTile: function (container) {

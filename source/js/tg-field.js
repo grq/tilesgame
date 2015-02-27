@@ -3,11 +3,9 @@
         parent: parent,
         container: false,
         fieldCells: [],
-        options: {
-            /* startTilesgameCount, size: { x, y }, tilesStyle */
-        },
+        options: {},
         allowMove: true,
-        tileContainer: false,
+        tileContainer: false
     };
     this.private.options = $.extend(this.defaultOptions, options);
 };
@@ -17,21 +15,23 @@ Tilesgame.inheritBase(Tilesgame.Field);
 $.extend(Tilesgame.Field.prototype, {
 
     restart: function () {
-        var self = this, cells = Array.prototype.concat.apply([], self.private.fieldCells);
-        for (var i = cells.length; i--;) {
-            if (cells[i].hasTile())
+        var self = this, i, cells = Array.prototype.concat.apply([], self.private.fieldCells);
+        for (i = cells.length; i--;) {
+            if (cells[i].hasTile()) {
                 cells[i].deleteTile();
+            }
         }
         self.private.allowMove = true;
         self.createDefaultTilesgame();
     },
 
     getAllAvailableFieldCells: function () {
-        var me = this.private, result = [];
-        for (var x = 0; x < me.options.size.x; x++) {
-            for (var y = 0; y < me.options.size.y; y++) {
-                if (!me.fieldCells[x][y].hasTile())
+        var me = this.private, result = [], x, y;
+        for (x = 0; x < me.options.size.x; x++) {
+            for (y = 0; y < me.options.size.y; y++) {
+                if (!me.fieldCells[x][y].hasTile()) {
                     result.push(me.fieldCells[x][y]);
+                }
             }
         }
         return result;
@@ -64,16 +64,18 @@ $.extend(Tilesgame.Field.prototype, {
             for (x = me.options.size.y; x--;) {
                 prevWeight = false;
                 for (y = me.options.size.x; y--;) {
-                    if (prevWeight == me.fieldCells[x][y].getTile().getWeight())
+                    if (prevWeight == me.fieldCells[x][y].getTile().getWeight()) {
                         return false;
+                    }
                     prevWeight = me.fieldCells[x][y].getTile().getWeight();
                 }
             }
             for (y = me.options.size.y; y--;) {
                 prevWeight = false;
                 for (x = me.options.size.x; x--;) {
-                    if (prevWeight == me.fieldCells[x][y].getTile().getWeight())
+                    if (prevWeight == me.fieldCells[x][y].getTile().getWeight()) {
                         return false;
+                    }
                     prevWeight = me.fieldCells[x][y].getTile().getWeight();
                 }
             }
@@ -84,8 +86,9 @@ $.extend(Tilesgame.Field.prototype, {
 
     render: function () {
         var self = this, me = self.private, x, y, cell;
-        if (!me.parent)
+        if (!me.parent) {
             throw 'Tilesgame: Game field parent is not defined';
+        }
         me.container = $('<div/>', {
             'class': Tilesgame.Cls.gamefield
         }).appendTo(me.parent);
@@ -145,8 +148,9 @@ $.extend(Tilesgame.Field.prototype, {
             for (j = 0; j < iterator[i].length; j++) {
                 x = iterator[i][j].x;
                 y = iterator[i][j].y;
-                if (!fieldCells[x][y].hasTile())
+                if (!fieldCells[x][y].hasTile()) {
                     availableCells.push(fieldCells[x][y]);
+                }
                 else if (lastTile && fieldCells[x][y].getTile().getWeight() == lastTile.getTile().getWeight()) {
                     mergeResult = self.mergeTilesgame(fieldCells[x][y], lastTile);
                     deferreds.push(mergeResult.deferred);
@@ -160,13 +164,13 @@ $.extend(Tilesgame.Field.prototype, {
                     availableCells.push(fieldCells[x][y]);
                     lastTile = cell;
                 }
-                else
+                else {
                     lastTile = fieldCells[x][y];
+                }
             }
         }
         $.when.apply($, deferreds).then(function () {
-            var allowCreate = !!deferreds.length;
-            self.afterMoveDone(allowCreate);
+            self.afterMoveDone(!!deferreds.length);
             callback(score);
         });
     },
@@ -175,21 +179,25 @@ $.extend(Tilesgame.Field.prototype, {
         var self = this;
         if (allowCreate) {
             $.when(self.createTile().promise()).then(function () {
-                if (!self.isGameOver())
+                if (!self.isGameOver()) {
                     self.private.allowMove = true;
-                else
+                }
+                else {
                     self.fire('gameover');
+                }
             });
         }
-        else
+        else {
             self.private.allowMove = true;
+        }
     },
 
     resize: function () {
-        var cells = Array.prototype.concat.apply([], this.private.fieldCells);
-        for (var i = cells.length; i--;) {
-            if (cells[i].hasTile())
+        var cells = Array.prototype.concat.apply([], this.private.fieldCells), i;
+        for (i = cells.length; i--;) {
+            if (cells[i].hasTile()) {
                 cells[i].getTile().resize();
+            }
         }
     },
 
@@ -211,8 +219,9 @@ $.extend(Tilesgame.Field.prototype, {
         var result = [], arr;
         for (var x = 0; x < xMax; x++) {
             arr = [];
-            for (var y = 0; y < yMax; y++)
+            for (var y = 0; y < yMax; y++) {
                 arr.push({ x: x, y: y });
+            }
             result.push(arr);
         }
         return result;
@@ -222,8 +231,9 @@ $.extend(Tilesgame.Field.prototype, {
         var result = [], arr;
         for (var y = 0; y < yMax; y++) {
             arr = [];
-            for (var x = 0; x < xMax; x++)
+            for (var x = 0; x < xMax; x++) {
                 arr.push({ x: x, y: y });
+            }
             result.push(arr);
         }
         return result;
@@ -233,8 +243,9 @@ $.extend(Tilesgame.Field.prototype, {
         var result = [], arr;
         for (var x = 0; x < xMax; x++) {
             arr = [];
-            for (var y = yMax; y--;)
+            for (var y = yMax; y--;) {
                 arr.push({ x: x, y: y });
+            }
             result.push(arr);
         }
         return result;
@@ -244,8 +255,9 @@ $.extend(Tilesgame.Field.prototype, {
         var result = [], arr;
         for (var y = 0; y < yMax; y++) {
             arr = [];
-            for (var x = xMax; x--;)
+            for (var x = xMax; x--;) {
                 arr.push({ x: x, y: y });
+            }
             result.push(arr);
         }
         return result;

@@ -87,9 +87,9 @@ Tilesgame.defaultOptions = {
     gameOverText: 'Your score is {score}, try again!',
     tryAgainText: 'Try again',
     newBestScoreText: 'New Best Score!',
-    imgFolder: '',
-    gameOverImg: '',
-    bestScoreImg: '',
+    imgFolder: null,
+    gameOverImg: null,
+    bestScoreImg: null,
     tilesStyle: {
         '2': { font: '', bg: '33CCCC', img: '' },
         '4': { font: '', bg: '3399CC', img: '' },

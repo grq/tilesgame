@@ -12,8 +12,9 @@
                     apps[i].move(e.which);
                 }
             }
-            else
+            else {
                 return;
+            }
             e.preventDefault();
         });
         $(window).resize(function () {

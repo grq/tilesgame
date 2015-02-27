@@ -88,9 +88,9 @@ Tilesgame.defaultOptions = {
     gameOverText: 'Your score is {score}, try again!',
     tryAgainText: 'Try again',
     newBestScoreText: 'New Best Score!',
-    imgFolder: '',
-    gameOverImg: '',
-    bestScoreImg: '',
+    imgFolder: null,
+    gameOverImg: null,
+    bestScoreImg: null,
     tilesStyle: {
         '2': { font: '', bg: '33CCCC', img: '' },
         '4': { font: '', bg: '3399CC', img: '' },
@@ -106,7 +106,15 @@ Tilesgame.defaultOptions = {
         '4096': { font: '', bg: 'CC3300', img: '' },
         '8192': { font: '', bg: '333366', img: '' },
         'default': { font: 'FFF', bg: '0066CC', img: '' }
-    }
+    },
+    durationShowGameOver: 1000,
+    durationHideGameOver: 500,
+    durationShowBestScore: 500,
+    durationHideBestScore: 500,
+    durationTileGrow: 80,
+    durationTileCreate: 80,
+    durationTileMove: 80,
+    tileGrowSizeIncrease: 20
 };
 Tilesgame.Base = function () {
     this.events = {};
@@ -118,16 +126,17 @@ $.extend(Tilesgame.Base.prototype, {
         if (!e[name]) {
             e[name] = [];
         }
-        if (scope)
+        if (scope) {
             handler = handler.bind(scope);
+        }
         e[name].push(handler);
     },
 
     fire: function (name) {
-        var e = this.events,
+        var e = this.events, i,
             args = Array.prototype.slice.call(arguments);
         if (e[name]) {
-            for (var i = e[name].length; i--;) {
+            for (i = e[name].length; i--;) {
                 e[name][i].apply(this, args);
             }
         }
@@ -140,7 +149,7 @@ Tilesgame.App = function (container, options) {
         options: false,
         gameField: false,
         gameScore: false,
-        gameMessanger: false,
+        gameMessanger: false
     };
     me.private.options = $.extend(true, Tilesgame.defaultOptions, options);
 };
@@ -151,22 +160,21 @@ $.extend(Tilesgame.App.prototype, {
 
     start: function () {
         var self = this;
-        if (!self.private.container)
+        if (!self.private.container) {
             throw 'Container is not defined';
-        else {
-            self.init();
-            self.render();
         }
+        self.init();
+        self.render();
     },
 
     restart: function () {
         var me = this.private;
-        if (me.gameMessanger)
-            me.gameMessanger.hide();
-        if (me.gameField)
+        if (me.gameField) {
             me.gameField.restart();
-        if (me.gameScore)
+        }
+        if (me.gameScore) {
             me.gameScore.restart();
+        }
     },
 
     init: function () {
@@ -187,7 +195,7 @@ $.extend(Tilesgame.App.prototype, {
             showBestScore: opt.showBestScore,
             buttons: opt.menuButtons,
             showWeight: opt.showWeight,
-            useImages: opt.useImages,
+            useImages: opt.useImages
         };
     },
 
@@ -197,7 +205,11 @@ $.extend(Tilesgame.App.prototype, {
             startTilesgameCount: opt.startTilesgameCount,
             size: opt.fieldSize,
             tilesStyle: opt.tilesStyle,
-            imgFolder: opt.imgFolder
+            imgFolder: opt.imgFolder,
+            durationTileGrow: opt.durationTileGrow,
+            durationTileCreate: opt.durationTileCreate,
+            durationTileMove: opt.durationTileMove,
+            tileGrowSizeIncrease: opt.tileGrowSizeIncrease
         };
     },
 
@@ -213,6 +225,10 @@ $.extend(Tilesgame.App.prototype, {
             imgFolder: opt.imgFolder,
             gameOverImg: opt.gameOverImg,
             bestScoreImg: opt.bestScoreImg,
+            durationShowGameOver: opt.durationShowGameOver,
+            durationShowBestScore: opt.durationShowBestScore,
+            durationHideGameOver: opt.durationHideGameOver,
+            durationHideBestScore: opt.durationHideBestScore
         };
     },
 
@@ -223,12 +239,14 @@ $.extend(Tilesgame.App.prototype, {
         me.gameField.render();
     },
 
-    onResize: function () {
+    resize: function () {
         var me = this.private;
-        if (me.gameField)
-            me.gameField.onResize();
-        if (me.gameMessanger)
-            me.gameMessanger.onResize();
+        if (me.gameField) {
+            me.gameField.resize();
+        }
+        if (me.gameMessanger) {
+            me.gameMessanger.resize();
+        }
     },
 
     onGameOver: function () {
@@ -249,11 +267,9 @@ Tilesgame.Field = function (parent, options) {
         parent: parent,
         container: false,
         fieldCells: [],
-        options: {
-            /* startTilesgameCount, size: { x, y }, tilesStyle */
-        },
+        options: {},
         allowMove: true,
-        tileContainer: false,
+        tileContainer: false
     };
     this.private.options = $.extend(this.defaultOptions, options);
 };
@@ -263,21 +279,23 @@ Tilesgame.inheritBase(Tilesgame.Field);
 $.extend(Tilesgame.Field.prototype, {
 
     restart: function () {
-        var self = this, cells = Array.prototype.concat.apply([], self.private.fieldCells);
-        for (var i = cells.length; i--;) {
-            if (cells[i].hasTile())
+        var self = this, i, cells = Array.prototype.concat.apply([], self.private.fieldCells);
+        for (i = cells.length; i--;) {
+            if (cells[i].hasTile()) {
                 cells[i].deleteTile();
+            }
         }
         self.private.allowMove = true;
         self.createDefaultTilesgame();
     },
 
     getAllAvailableFieldCells: function () {
-        var me = this.private, result = [];
-        for (var x = 0; x < me.options.size.x; x++) {
-            for (var y = 0; y < me.options.size.y; y++) {
-                if (!me.fieldCells[x][y].hasTile())
+        var me = this.private, result = [], x, y;
+        for (x = 0; x < me.options.size.x; x++) {
+            for (y = 0; y < me.options.size.y; y++) {
+                if (!me.fieldCells[x][y].hasTile()) {
                     result.push(me.fieldCells[x][y]);
+                }
             }
         }
         return result;
@@ -310,16 +328,18 @@ $.extend(Tilesgame.Field.prototype, {
             for (x = me.options.size.y; x--;) {
                 prevWeight = false;
                 for (y = me.options.size.x; y--;) {
-                    if (prevWeight == me.fieldCells[x][y].getTile().getWeight())
+                    if (prevWeight == me.fieldCells[x][y].getTile().getWeight()) {
                         return false;
+                    }
                     prevWeight = me.fieldCells[x][y].getTile().getWeight();
                 }
             }
             for (y = me.options.size.y; y--;) {
                 prevWeight = false;
                 for (x = me.options.size.x; x--;) {
-                    if (prevWeight == me.fieldCells[x][y].getTile().getWeight())
+                    if (prevWeight == me.fieldCells[x][y].getTile().getWeight()) {
                         return false;
+                    }
                     prevWeight = me.fieldCells[x][y].getTile().getWeight();
                 }
             }
@@ -330,8 +350,9 @@ $.extend(Tilesgame.Field.prototype, {
 
     render: function () {
         var self = this, me = self.private, x, y, cell;
-        if (!me.parent)
+        if (!me.parent) {
             throw 'Tilesgame: Game field parent is not defined';
+        }
         me.container = $('<div/>', {
             'class': Tilesgame.Cls.gamefield
         }).appendTo(me.parent);
@@ -357,7 +378,11 @@ $.extend(Tilesgame.Field.prototype, {
         var opt = this.private.options;
         return {
             tilesStyle: opt.tilesStyle,
-            imgFolder: opt.imgFolder
+            imgFolder: opt.imgFolder,
+            durationTileGrow: opt.durationTileGrow,
+            durationTileCreate: opt.durationTileCreate,
+            durationTileMove: opt.durationTileMove,
+            tileGrowSizeIncrease: opt.tileGrowSizeIncrease
         };
     },
 
@@ -387,8 +412,9 @@ $.extend(Tilesgame.Field.prototype, {
             for (j = 0; j < iterator[i].length; j++) {
                 x = iterator[i][j].x;
                 y = iterator[i][j].y;
-                if (!fieldCells[x][y].hasTile())
+                if (!fieldCells[x][y].hasTile()) {
                     availableCells.push(fieldCells[x][y]);
+                }
                 else if (lastTile && fieldCells[x][y].getTile().getWeight() == lastTile.getTile().getWeight()) {
                     mergeResult = self.mergeTilesgame(fieldCells[x][y], lastTile);
                     deferreds.push(mergeResult.deferred);
@@ -402,13 +428,13 @@ $.extend(Tilesgame.Field.prototype, {
                     availableCells.push(fieldCells[x][y]);
                     lastTile = cell;
                 }
-                else
+                else {
                     lastTile = fieldCells[x][y];
+                }
             }
         }
         $.when.apply($, deferreds).then(function () {
-            var allowCreate = !!deferreds.length;
-            self.afterMoveDone(allowCreate);
+            self.afterMoveDone(!!deferreds.length);
             callback(score);
         });
     },
@@ -417,21 +443,25 @@ $.extend(Tilesgame.Field.prototype, {
         var self = this;
         if (allowCreate) {
             $.when(self.createTile().promise()).then(function () {
-                if (!self.isGameOver())
+                if (!self.isGameOver()) {
                     self.private.allowMove = true;
-                else
+                }
+                else {
                     self.fire('gameover');
+                }
             });
         }
-        else
+        else {
             self.private.allowMove = true;
+        }
     },
 
-    onResize: function () {
-        var cells = Array.prototype.concat.apply([], this.private.fieldCells);
-        for (var i = cells.length; i--;) {
-            if (cells[i].hasTile())
-                cells[i].getTile().onResize();
+    resize: function () {
+        var cells = Array.prototype.concat.apply([], this.private.fieldCells), i;
+        for (i = cells.length; i--;) {
+            if (cells[i].hasTile()) {
+                cells[i].getTile().resize();
+            }
         }
     },
 
@@ -453,8 +483,9 @@ $.extend(Tilesgame.Field.prototype, {
         var result = [], arr;
         for (var x = 0; x < xMax; x++) {
             arr = [];
-            for (var y = 0; y < yMax; y++)
+            for (var y = 0; y < yMax; y++) {
                 arr.push({ x: x, y: y });
+            }
             result.push(arr);
         }
         return result;
@@ -464,8 +495,9 @@ $.extend(Tilesgame.Field.prototype, {
         var result = [], arr;
         for (var y = 0; y < yMax; y++) {
             arr = [];
-            for (var x = 0; x < xMax; x++)
+            for (var x = 0; x < xMax; x++) {
                 arr.push({ x: x, y: y });
+            }
             result.push(arr);
         }
         return result;
@@ -475,8 +507,9 @@ $.extend(Tilesgame.Field.prototype, {
         var result = [], arr;
         for (var x = 0; x < xMax; x++) {
             arr = [];
-            for (var y = yMax; y--;)
+            for (var y = yMax; y--;) {
                 arr.push({ x: x, y: y });
+            }
             result.push(arr);
         }
         return result;
@@ -486,8 +519,9 @@ $.extend(Tilesgame.Field.prototype, {
         var result = [], arr;
         for (var y = 0; y < yMax; y++) {
             arr = [];
-            for (var x = xMax; x--;)
+            for (var x = xMax; x--;) {
                 arr.push({ x: x, y: y });
+            }
             result.push(arr);
         }
         return result;
@@ -498,7 +532,7 @@ Tilesgame.FieldCell = function (options) {
     me.private = {
         el: false,
         currentTile: false,
-        options: options
+        options: {}
     };
     $.extend(me.private.options, options);
 };
@@ -518,8 +552,9 @@ $.extend(Tilesgame.FieldCell.prototype, {
     },
 
     setTile: function (tile, increase) {
-        this.private.currentTile = tile;
-        return this.private.currentTile.setFieldCell(this.private.el, increase);
+        var me = this.private;
+        me.currentTile = tile;
+        return me.currentTile.setFieldCell(me.el, increase);
     },
 
     createTile: function (container) {
@@ -542,7 +577,11 @@ $.extend(Tilesgame.FieldCell.prototype, {
         var opt = this.private.options;
         return {
             tilesStyle: opt.tilesStyle,
-            imgFolder: opt.imgFolder
+            imgFolder: opt.imgFolder,
+            durationTileGrow: opt.durationTileGrow,
+            durationTileCreate: opt.durationTileCreate,
+            durationTileMove: opt.durationTileMove,
+            tileGrowSizeIncrease: opt.tileGrowSizeIncrease
         };
     },
 
@@ -555,7 +594,8 @@ $.extend(Tilesgame.FieldCell.prototype, {
     }
 });
 Tilesgame.Scoreboard = function (parent, options) {
-    this.private = {
+    var me = this;
+    me.private = {
         parent: parent,
         container: false,
         totalScore: 0,
@@ -563,9 +603,7 @@ Tilesgame.Scoreboard = function (parent, options) {
         scoreEl: false,
         bestScoreEl: false,
         settingsEl: false,
-        options: {
-            /* visible, showBestScore, buttons, showWeight, */
-        },
+        options: {},
         settings: {
             showTileWeight: {
                 el: false,
@@ -584,7 +622,7 @@ Tilesgame.Scoreboard = function (parent, options) {
             }
         }
     };
-    $.extend(this.private.options, options);
+    $.extend(me.private.options, options);
 };
 
 Tilesgame.inheritBase(Tilesgame.Scoreboard);
@@ -597,8 +635,9 @@ $.extend(Tilesgame.Scoreboard.prototype, {
         me.totalScore = 0;
         me.bestScore = 'NA';
         if (localStorage) {
-            if (!localStorage[Tilesgame.storageBestScoreKey])
+            if (!localStorage[Tilesgame.storageBestScoreKey]) {
                 localStorage[Tilesgame.storageBestScoreKey] = 0;
+            }
             me.bestScore = localStorage[Tilesgame.storageBestScoreKey];
         }
         self.updateScore();
@@ -664,12 +703,15 @@ $.extend(Tilesgame.Scoreboard.prototype, {
         me.settingsEl = $('<div/>', {
             'class': Tilesgame.Cls.settingsContainer
         }).appendTo(el);
-        if ((me.options.buttons & Tilesgame.ScoreBoardButton.ShowHideWeight) > 0)
+        if ((me.options.buttons & Tilesgame.ScoreBoardButton.ShowHideWeight) > 0) {
             self.initTileWeight();
-        if ((me.options.buttons & Tilesgame.ScoreBoardButton.Restart) > 0)
+        }
+        if ((me.options.buttons & Tilesgame.ScoreBoardButton.Restart) > 0) {
             self.renderRestartBtn();
-        if ((me.options.buttons & Tilesgame.ScoreBoardButton.ShowHideImages) > 0)
+        }
+        if ((me.options.buttons & Tilesgame.ScoreBoardButton.ShowHideImages) > 0) {
             self.initImageSwitcher();
+        }
     },
 
     initTileWeight: function () {
@@ -684,8 +726,9 @@ $.extend(Tilesgame.Scoreboard.prototype, {
         var self = this, me = self.private,
             setting = me.settings.showTileWeight,
             parent = $(me.parent);
-        if (!isInit)
+        if (!isInit) {
             setting.state = !setting.state;
+        }
         setting.el.text(setting.state ? setting.hideTxt : setting.showTxt);
         parent.toggleClass(Tilesgame.Cls.hideTileWeight, !setting.state);
     },
@@ -710,8 +753,9 @@ $.extend(Tilesgame.Scoreboard.prototype, {
     toggleImages: function (isInit) {
         var self = this, me = self.private,
             setting = me.settings.showHideImages;
-        if (!isInit)
+        if (!isInit) {
             setting.state = !setting.state;
+        }
         setting.el.text(setting.state ? setting.hideTxt : setting.showTxt);
         $('body').toggleClass(Tilesgame.Cls.noImages, !setting.state);
     },
@@ -728,14 +772,9 @@ $.extend(Tilesgame.Scoreboard.prototype, {
 });
 Tilesgame.ScreenMessanger = function (parent, options) {
     this.private = {
-        options: {
-            /* fullScreenMessages, showTryAgain, gameOverTitle, gameOverText, tryAgainText, newBestScoreText, imgFolder, gameOverImg, bestScoreImg */
-        },
+        options: {},
         parent: parent,
-        score: 'NA',
-        durationOver: 1000,
-        durationHide: 500,
-        durationBestScore: 500,
+        score: 'NA'
     };
     $.extend(this.private.options, options);
     this.init();
@@ -750,31 +789,27 @@ $.extend(Tilesgame.ScreenMessanger.prototype, {
         NewBestScore: 2
     },
 
-    onResize: function () {
-        this.resize();
-    },
-
     showGameOver: function (score) {
-        var self = this;
-        self.private.score = score;
-        self.showMessage(self.Message.GameOver, self.private.durationOver);
+        var self = this, me = self.private;
+        me.score = score;
+        self.showMessage(self.Message.GameOver, me.options.durationShowGameOver);
     },
 
     showBestScore: function () {
-        var self = this;
-        self.showMessage(self.Message.NewBestScore, self.private.durationBestScore);
-        self.hide();
+        var self = this, opt = self.private.options;
+        self.showMessage(self.Message.NewBestScore, opt.durationShowBestScore);
+        self.hide(opt.durationHideBestScore);
     },
 
-    hide: function () {
+    hide: function (duration) {
         var self = this, me = self.private;
-        me.maskEl.animate({ opacity: '0' }, me.durationHide, function () {
+        me.maskEl.animate({ opacity: '0' }, duration, function () {
             me.maskEl.hide();
         });
-        me.msgBoxEl.animate({ opacity: '0' }, me.durationHide, function () {
+        me.msgBoxEl.animate({ opacity: '0' }, duration, function () {
             me.msgBoxEl.hide();
         });
-        me.msgEl.animate({ opacity: '0' }, me.durationHide, function () {
+        me.msgEl.animate({ opacity: '0' }, duration, function () {
             me.gameOverEl.appendTo(me.msgHolder);
             me.bestScoreEl.appendTo(me.msgHolder);
             me.msgEl.hide();
@@ -796,16 +831,18 @@ $.extend(Tilesgame.ScreenMessanger.prototype, {
             case self.Message.GameOver:
                 me.gameOverEl.appendTo(me.msgEl);
                 img = me.options.gameOverImg;
-                if (me.scoreEl)
+                if (me.scoreEl) {
                     me.scoreEl.html(me.score);
+                }
                 break;
             case self.Message.NewBestScore:
                 me.bestScoreEl.appendTo(me.msgEl);
                 img = me.options.bestScoreImg;
                 break;
         }
-        if (img)
+        if (img) {
             me.maskEl.css({ 'background-image': ['url(', me.options.imgFolder, img, ')'].join('') });
+        }
         self.resize();
     },
 
@@ -891,8 +928,9 @@ $.extend(Tilesgame.ScreenMessanger.prototype, {
                     'class': Tilesgame.Cls.messageScore
                 }).appendTo(msgSpan);
             }
-            else
+            else {
                 msgSpan.append(splitted[i]);
+            }
         }
     },
 
@@ -901,6 +939,7 @@ $.extend(Tilesgame.ScreenMessanger.prototype, {
         divRestart = $('<div/>', { 'class': Tilesgame.Cls.buttonRestart }).appendTo(me.gameOverEl);
         spanRestart = $('<span/>').html(me.options.tryAgainText).appendTo(divRestart);
         spanRestart.click(function () {
+            self.hide(me.options.durationHideGameOver);
             self.fire('restart');
         });
     }
@@ -929,17 +968,19 @@ $.extend(Tilesgame.Tile.prototype, {
     setFieldCell: function (cell) {
         var self = this, deferred = $.Deferred();
         self.private.cell = cell;
-        if (self.private.rendered)
+        if (self.private.rendered) {
             self.animateMove(deferred);
-        else
+        }
+        else {
             self.render(deferred);
+        }
         return deferred.promise();
     },
 
     animateIncreaseWeight: function (deferred) {
-        var el = this.private.el,
-            duration = 80,
-            addition = 20,
+        var me = this.private, el = me.el,
+            duration = me.options.durationTileGrow,
+            addition = me.options.tileGrowSizeIncrease,
             height = el.height(),
             width = el.width(),
             newCss = {
@@ -964,8 +1005,8 @@ $.extend(Tilesgame.Tile.prototype, {
     },
 
     animateCreation: function (deferred) {
-        var el = this.private.el,
-            duration = 100,
+        var me = this.private, el = me.el,
+            duration = me.options.durationTileCreate,
             height = el.height(),
             width = el.width(),
             newCss = {
@@ -988,11 +1029,12 @@ $.extend(Tilesgame.Tile.prototype, {
         });
     },
 
-    animateMove: function (deferred, duration) {
-        var defaultDuration = 100;
-        this.private.el.animate(this.private.cell.offset(), duration || defaultDuration, function () {
-            if (deferred)
+    animateMove: function (deferred) {
+        var me = this.private;
+        me.el.animate(me.cell.offset(), me.options.durationTileMove, function () {
+            if (deferred) {
                 deferred.resolve();
+            }
         });
     },
 
@@ -1002,7 +1044,7 @@ $.extend(Tilesgame.Tile.prototype, {
 
     increaseWeight: function (outDeferred) {
         var self = this, deferred = $.Deferred();
-        this.private.weight *= 2;
+        self.private.weight *= 2;
         $.when(outDeferred).then(function () {
             self.printWeight();
             self.animateIncreaseWeight(deferred);
@@ -1041,7 +1083,7 @@ $.extend(Tilesgame.Tile.prototype, {
         me.rendered = true;
     },
 
-    onResize: function () {
+    resize: function () {
         this.private.el.css(this.private.cell.offset());
     },
 
@@ -1055,8 +1097,9 @@ $.extend(Tilesgame.Tile.prototype, {
             me.cell = cell.getEl();
             self.animateMove(deferred);
         }
-        else
+        else {
             me.el.detach();
+        }
         return deferred;
     }
 });
@@ -1074,13 +1117,14 @@ if (jQuery) {
                     apps[i].move(e.which);
                 }
             }
-            else
+            else {
                 return;
+            }
             e.preventDefault();
         });
         $(window).resize(function () {
             for (var i = apps.length; i--;) {
-                apps[i].onResize();
+                apps[i].resize();
             }
         });
         return apps;

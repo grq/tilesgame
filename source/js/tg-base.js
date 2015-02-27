@@ -8,16 +8,17 @@ $.extend(Tilesgame.Base.prototype, {
         if (!e[name]) {
             e[name] = [];
         }
-        if (scope)
+        if (scope) {
             handler = handler.bind(scope);
+        }
         e[name].push(handler);
     },
 
     fire: function (name) {
-        var e = this.events,
+        var e = this.events, i,
             args = Array.prototype.slice.call(arguments);
         if (e[name]) {
-            for (var i = e[name].length; i--;) {
+            for (i = e[name].length; i--;) {
                 e[name][i].apply(this, args);
             }
         }

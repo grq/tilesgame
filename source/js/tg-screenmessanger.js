@@ -1,10 +1,8 @@
 ﻿Tilesgame.ScreenMessanger = function (parent, options) {
     this.private = {
-        options: {
-            /* fullScreenMessages, showTryAgain, gameOverTitle, gameOverText, tryAgainText, newBestScoreText, imgFolder, gameOverImg, bestScoreImg */
-        },
+        options: {},
         parent: parent,
-        score: 'NA',
+        score: 'NA'
     };
     $.extend(this.private.options, options);
     this.init();
@@ -61,16 +59,18 @@ $.extend(Tilesgame.ScreenMessanger.prototype, {
             case self.Message.GameOver:
                 me.gameOverEl.appendTo(me.msgEl);
                 img = me.options.gameOverImg;
-                if (me.scoreEl)
+                if (me.scoreEl) {
                     me.scoreEl.html(me.score);
+                }
                 break;
             case self.Message.NewBestScore:
                 me.bestScoreEl.appendTo(me.msgEl);
                 img = me.options.bestScoreImg;
                 break;
         }
-        if (img)
+        if (img) {
             me.maskEl.css({ 'background-image': ['url(', me.options.imgFolder, img, ')'].join('') });
+        }
         self.resize();
     },
 
@@ -156,8 +156,9 @@ $.extend(Tilesgame.ScreenMessanger.prototype, {
                     'class': Tilesgame.Cls.messageScore
                 }).appendTo(msgSpan);
             }
-            else
+            else {
                 msgSpan.append(splitted[i]);
+            }
         }
     },
 
@@ -166,7 +167,7 @@ $.extend(Tilesgame.ScreenMessanger.prototype, {
         divRestart = $('<div/>', { 'class': Tilesgame.Cls.buttonRestart }).appendTo(me.gameOverEl);
         spanRestart = $('<span/>').html(me.options.tryAgainText).appendTo(divRestart);
         spanRestart.click(function () {
-            self.hide(me.options.durationHideGameOver)
+            self.hide(me.options.durationHideGameOver);
             self.fire('restart');
         });
     }

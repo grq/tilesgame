@@ -22,10 +22,12 @@ $.extend(Tilesgame.Tile.prototype, {
     setFieldCell: function (cell) {
         var self = this, deferred = $.Deferred();
         self.private.cell = cell;
-        if (self.private.rendered)
+        if (self.private.rendered) {
             self.animateMove(deferred);
-        else
+        }
+        else {
             self.render(deferred);
+        }
         return deferred.promise();
     },
 
@@ -84,8 +86,9 @@ $.extend(Tilesgame.Tile.prototype, {
     animateMove: function (deferred) {
         var me = this.private;
         me.el.animate(me.cell.offset(), me.options.durationTileMove, function () {
-            if (deferred)
+            if (deferred) {
                 deferred.resolve();
+            }
         });
     },
 
@@ -148,8 +151,9 @@ $.extend(Tilesgame.Tile.prototype, {
             me.cell = cell.getEl();
             self.animateMove(deferred);
         }
-        else
+        else {
             me.el.detach();
+        }
         return deferred;
     }
 });
