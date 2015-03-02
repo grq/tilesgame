@@ -17,7 +17,7 @@ $.extend(Tilesgame.App.prototype, {
     start: function () {
         var self = this;
         if (!self.private.container) {
-            throw 'Container is not defined';
+            throw Tilesgame.Errors.ContainerNotDefined;
         }
         self.init();
         self.render();

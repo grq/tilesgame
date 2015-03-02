@@ -24,46 +24,31 @@
 
     Cls: {
         container: 'tilesgame-container',
-
         scoreboard: 'tilesgame-scoreboard',
-
         gamefield: 'tilesgame-game-field',
-
         fieldline: 'tilesgame-field-line',
-
         tilesContainer: 'tilesgame-tile-container',
-
         fieldCell: 'tilesgame-field-cell',
-
         hideTileWeight: 'tilesgame-setting-no-weight',
-
         settingsContainer: 'tilesgame-game-settings',
-
         scoreText: 'tilesgame-score-txt',
-
         scoreValue: 'tilesgame-score',
-
         messageMask: 'tilesgame-msg-mask',
-
         messageMaskInCnt: 'tilesgame-mask-in-cnt',
-
         messageBox: 'tilesgame-msg-box',
-
         message: 'tilesgame-message',
-
         messageSmall: 'tilesgame-lose-msg-small',
-
         messageScore: 'tilesgame-lose-msg-score',
-
         buttonRestart: 'tilesgame-game-over-restart-btn',
-
         messageHolder: 'tilesgame-msg-holder',
-
         tile: 'tilesgame-game-tile',
-
         tileWeight: 'tilesgame-tile-weight',
-
         noImages: 'tilesgame-setting-noimages'
+    },
+
+    Errors: {
+        ContainerNotDefined: 'Tilesgame Exception: Container is not defined',
+        JQueryNotDefined: 'Tilesgame Exception: jQuery is not defined!'
     },
 
     storageBestScoreKey: 'TILESGAME_BEST_SCORE',
