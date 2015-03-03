@@ -29,14 +29,16 @@ gulp.task('buildjs', function () {
 });
 
 gulp.task('buildcss', function () {
-    return gulp.src('source/css/*.css')
+    return gulp.src('source/styles/*.css')
         .pipe(concat('tilesgame.css'))
         .pipe(minifyCss())
         .pipe(gulp.dest(BUILD_DIRECTORY));
 });
 
 gulp.task('buildextras', function () {
-    return gulp.src('source/extras/*')
+    return gulp.src('source/styles/*.woff')
+        .pipe(gulp.dest(BUILD_DIRECTORY))
+        .gulp.src('source/styles/*.png')
         .pipe(gulp.dest(BUILD_DIRECTORY));
 });
 
