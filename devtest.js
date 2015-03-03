@@ -1,5 +1,6 @@
 (function () {
-    localStorage[Tilesgame.storageBestScoreKey] = 0;
+    if (localStorage)
+        localStorage[Tilesgame.storageBestScoreKey] = 0;
     var options = {
         startTilesgameCount: 16,
         fieldSize: { x: 4, y: 4 },
