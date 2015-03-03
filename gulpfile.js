@@ -5,10 +5,15 @@
     order = require('gulp-order'),
     minifyCss = require('gulp-minify-css'),
     rename = require('gulp-rename'),
-    runSequence = require('run-sequence'),
-    BUILD_DIRECTORY = 'build/tilesgame';
+    clean = require('gulp-clean'),
+    buldDir = 'build/tilesgame',
+    buldDirExtras = buldDirExtras + '/extras';
 
-gulp.task('buildjs', function () {
+gulp.task('cleanBuildFolder', function () {
+    return gulp.src(buldDir).pipe(clean());
+});
+
+gulp.task('buildjs', ['cleanBuildFolder'], function () {
     return gulp.src('source/**/*.js')
         .pipe(order([
             "js/add/tg-disclaimer.js",
@@ -20,37 +25,27 @@ gulp.task('buildjs', function () {
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
         .pipe(concat('tilesgame.js'))
-        .pipe(gulp.dest(BUILD_DIRECTORY))
+        .pipe(gulp.dest(buldDir))
         .pipe(rename('tilesgame.min.js'))
         .pipe(uglify({
             preserveComments: 'some'
         }))
-        .pipe(gulp.dest(BUILD_DIRECTORY));
+        .pipe(gulp.dest(buldDir));
 });
 
-gulp.task('buildcss', function () {
+gulp.task('buildcss', ['cleanBuildFolder'], function () {
     return gulp.src('source/styles/*.css')
         .pipe(concat('tilesgame.css'))
         .pipe(minifyCss())
-        .pipe(gulp.dest(BUILD_DIRECTORY));
+        .pipe(gulp.dest(buldDir));
 });
 
-gulp.task('buildextras', function () {
-    return gulp.src('source/styles/*.woff')
-        .pipe(gulp.dest(BUILD_DIRECTORY))
-        .gulp.src('source/styles/*.png')
-        .pipe(gulp.dest(BUILD_DIRECTORY));
+gulp.task('copyextras', ['cleanBuildFolder'], function () {
+    return gulp.src('source/styles/extras/*').pipe(gulp.dest(buldDirExtras));
 });
 
-gulp.task('buildreadme', function () {
-    return gulp.src('readme.txt')
-        .pipe(gulp.dest(BUILD_DIRECTORY));
+gulp.task('copyreadme', ['cleanBuildFolder'], function () {
+    return gulp.src('readme.txt').pipe(gulp.dest(buldDir));
 });
 
-gulp.task('build', function () {
-    var callback = function () {
-        console.log(Date(), ': BUILD HAS BEEN COMPLETED');
-    }
-    console.log(Date(), ': BUILD HAS BEEN STARTED');
-    runSequence(['buildjs', 'buildcss', 'buildextras', 'buildreadme'], callback);
-})
+gulp.task('build', ['buildjs', 'buildcss', 'copyextras', 'copyreadme']);
